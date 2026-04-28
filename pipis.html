@@ -3,37 +3,81 @@
 <head>
     <style>
         body {
-            margin: 0;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            margin: 0; background: black; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
         }
-        #target {
-            height: 60vh;
+        #pipis {
+            height: 40vh; image-rendering: pixelated; cursor: pointer;
+            transition: transform 0.1s;
+        }
+        #pipis:active { transform: scale(0.9); }
+        
+        .spamton-head {
+            position: absolute;
+            width: 80px; /* Adjust if they are too small/big */
             image-rendering: pixelated;
-            cursor: pointer;
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
-    <!-- Start with the blue egg -->
-    <img id="target" src="pipis.png" onclick="explode()">
+
+    <!-- The Blue Egg -->
+    <img id="pipis" src="pipis.png" onclick="spawnHeads()">
 
     <script>
-        function explode() {
-            const img = document.getElementById('target');
-            // Swap to your explosion GIF
-            img.src = 'explosion.gif';
-            
-            // Wait 1.5 seconds for the 'boom' then leave
+        function spawnHeads() {
+            const pipis = document.getElementById('pipis');
+            const rect = pipis.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            pipis.style.display = 'none';
+
+            for (let i = 0; i < 25; i++) {
+                const head = document.createElement('img');
+                head.src = 'spamton-head.gif'; // MUST MATCH YOUR FILENAME
+                head.className = 'spamton-head';
+                
+                head.style.left = centerX + 'px';
+                head.style.top = centerY + 'px';
+                document.body.appendChild(head);
+
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 4 + Math.random() * 12;
+                const rotationSpeed = (Math.random() - 0.5) * 20;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+
+                let posX = centerX;
+                let posY = centerY;
+                let rotation = 0;
+
+                function animate() {
+                    posX += vx;
+                    posY += vy;
+                    rotation += rotationSpeed;
+                    
+                    head.style.left = posX + 'px';
+                    head.style.top = posY + 'px';
+                    head.style.transform = `rotate(${rotation}deg)`;
+                    
+                    if (posX > -100 && posX < window.innerWidth + 100 && 
+                        posY > -100 && posY < window.innerHeight + 100) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        head.remove();
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            // Redirect back to your safe site after 2.5 seconds
             setTimeout(() => {
-                window.location.href = "https://www.google.com";
-            }, 1500);
+                window.location.href = "https://google.com";
+            }, 2500);
         }
     </script>
 </body>
 </html>
-

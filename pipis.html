@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #target {
+            height: 60vh;
+            image-rendering: pixelated;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Start with the blue egg -->
+    <img id="target" src="pipis.png" onclick="explode()">
+
+    <script>
+        function explode() {
+            const img = document.getElementById('target');
+            // Swap to your explosion GIF
+            img.src = 'explosion.gif';
+            
+            // Wait 1.5 seconds for the 'boom' then leave
+            setTimeout(() => {
+                window.location.href = "https://www.google.com";
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
 

@@ -3,93 +3,77 @@
 <head>
     <style>
         body {
-            margin: 0; 
-            background: black; 
-            overflow: hidden;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh;
+            margin: 0; background: black; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
         }
         #pipis {
-            height: 40vh; 
-            image-rendering: pixelated; 
-            cursor: pointer;
+            height: 40vh; image-rendering: pixelated; cursor: pointer;
             transition: transform 0.1s;
         }
         #pipis:active { transform: scale(0.9); }
-        
         .spamton-head {
-            position: absolute;
-            width: 80px; /* Adjust size of the heads here */
-            image-rendering: pixelated;
-            pointer-events: none;
-            z-index: 10;
+            position: absolute; width: 100px; /* Bigger heads for more impact */
+            image-rendering: pixelated; pointer-events: none; z-index: 10;
         }
     </style>
 </head>
 <body>
 
-    <!-- The Blue Egg -->
+    <!-- Sound element (hidden) -->
+    <audio id="boomSound" src="boom.mp3"></audio>
+
     <img id="pipis" src="pipis.png" onclick="spawnHeads()">
 
     <script>
         function spawnHeads() {
             const pipis = document.getElementById('pipis');
+            const sound = document.getElementById('boomSound');
             const rect = pipis.getBoundingClientRect();
-            
-            // Get center point of the Pipis for the "explosion" origin
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            // Hide the Pipis egg
+            // Play the sound immediately
+            sound.play();
+
             pipis.style.display = 'none';
 
-            // Create 25 Spamton heads
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 35; i++) { // More heads for a "faster" look
                 const head = document.createElement('img');
-                head.src = 'spamton-head.gif'; // MUST MATCH YOUR FILENAME EXACTLY
+                head.src = 'spamton-head.gif';
                 head.className = 'spamton-head';
-                
-                // Position head at the center of the egg
                 head.style.left = centerX + 'px';
                 head.style.top = centerY + 'px';
                 document.body.appendChild(head);
 
-                // Math for flying direction and speed
                 const angle = Math.random() * Math.PI * 2;
-                const speed = 4 + Math.random() * 12;
+                // SPEED INCREASED HERE (was 4-12, now 10-25)
+                const speed = 10 + Math.random() * 15; 
                 const vx = Math.cos(angle) * speed;
                 const vy = Math.sin(angle) * speed;
 
                 let posX = centerX;
                 let posY = centerY;
 
-                // The animation loop for this specific head
                 function moveHead() {
                     posX += vx;
                     posY += vy;
-                    
                     head.style.left = posX + 'px';
                     head.style.top = posY + 'px';
                     
-                    // Keep moving until it goes off screen
-                    if (posX > -150 && posX < window.innerWidth + 150 && 
-                        posY > -150 && posY < window.innerHeight + 150) {
+                    if (posX > -200 && posX < window.innerWidth + 200 && 
+                        posY > -200 && posY < window.innerHeight + 200) {
                         requestAnimationFrame(moveHead);
                     } else {
                         head.remove();
                     }
                 }
-                
-                // Start the movement
                 requestAnimationFrame(moveHead);
             }
 
-            // Redirect to safety after 2.5 seconds
+            // Redirect slightly faster to match the speed
             setTimeout(() => {
                 window.location.href = "https://google.com";
-            }, 2500);
+            }, 1800);
         }
     </script>
 </body>

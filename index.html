@@ -14,12 +14,14 @@
             font-family: sans-serif;
         }
         img {
-        width: 80vw; /* Makes him take up 80% of the screen width */
-        height: auto; 
-        image-rendering: pixelated; /* THIS KEEPS HIM SHARP, NOT BLURRY */
-        image-rendering: crisp-edges; /* For older browsers */
-        margin-bottom: 20px;
+            height: 60vh; /* This uses 60% of the screen height */
+            width: auto;  /* Keeps his proportions correct */
+            max-width: 90vw; /* Prevents him from bleeding off the sides */
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            margin-bottom: 20px;
         }
+
         .big-shot-btn {
             padding: 15px 30px;
             font-size: 20px;

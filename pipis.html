@@ -3,18 +3,25 @@
 <head>
     <style>
         body {
-            margin: 0; background: black; overflow: hidden;
-            display: flex; justify-content: center; align-items: center; height: 100vh;
+            margin: 0; 
+            background: black; 
+            overflow: hidden;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
         }
         #pipis {
-            height: 40vh; image-rendering: pixelated; cursor: pointer;
+            height: 40vh; 
+            image-rendering: pixelated; 
+            cursor: pointer;
             transition: transform 0.1s;
         }
         #pipis:active { transform: scale(0.9); }
         
         .spamton-head {
             position: absolute;
-            width: 80px; /* Adjust if they are too small/big */
+            width: 80px; /* Adjust size of the heads here */
             image-rendering: pixelated;
             pointer-events: none;
             z-index: 10;
@@ -30,50 +37,56 @@
         function spawnHeads() {
             const pipis = document.getElementById('pipis');
             const rect = pipis.getBoundingClientRect();
+            
+            // Get center point of the Pipis for the "explosion" origin
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
+            // Hide the Pipis egg
             pipis.style.display = 'none';
 
+            // Create 25 Spamton heads
             for (let i = 0; i < 25; i++) {
                 const head = document.createElement('img');
-                head.src = 'spamton-head.gif'; // MUST MATCH YOUR FILENAME
+                head.src = 'spamton-head.gif'; // MUST MATCH YOUR FILENAME EXACTLY
                 head.className = 'spamton-head';
                 
+                // Position head at the center of the egg
                 head.style.left = centerX + 'px';
                 head.style.top = centerY + 'px';
                 document.body.appendChild(head);
 
+                // Math for flying direction and speed
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 4 + Math.random() * 12;
-                const rotationSpeed = (Math.random() - 0.5) * 20;
                 const vx = Math.cos(angle) * speed;
                 const vy = Math.sin(angle) * speed;
 
                 let posX = centerX;
                 let posY = centerY;
-                let rotation = 0;
 
-                function animate() {
+                // The animation loop for this specific head
+                function moveHead() {
                     posX += vx;
                     posY += vy;
-                    rotation += rotationSpeed;
                     
                     head.style.left = posX + 'px';
                     head.style.top = posY + 'px';
-                    head.style.transform = `rotate(${rotation}deg)`;
                     
-                    if (posX > -100 && posX < window.innerWidth + 100 && 
-                        posY > -100 && posY < window.innerHeight + 100) {
-                        requestAnimationFrame(animate);
+                    // Keep moving until it goes off screen
+                    if (posX > -150 && posX < window.innerWidth + 150 && 
+                        posY > -150 && posY < window.innerHeight + 150) {
+                        requestAnimationFrame(moveHead);
                     } else {
                         head.remove();
                     }
                 }
-                requestAnimationFrame(animate);
+                
+                // Start the movement
+                requestAnimationFrame(moveHead);
             }
 
-            // Redirect back to your safe site after 2.5 seconds
+            // Redirect to safety after 2.5 seconds
             setTimeout(() => {
                 window.location.href = "https://google.com";
             }, 2500);

@@ -1,38 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>PIPIS ROOM</title>
     <style>
         body {
-            margin: 0; background: black; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;
-            color: white; font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            background-color: black;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
         }
+
         #counter-ui {
-            font-size: 24px; margin-bottom: 20px; text-transform: uppercase;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px #e62020;
+            letter-spacing: 2px;
         }
+
         #pipis {
-            height: 40vh; image-rendering: pixelated; cursor: pointer;
+            height: 45vh;
+            image-rendering: pixelated;
+            cursor: pointer;
             transition: transform 0.1s;
+            z-index: 5;
         }
+
+        #pipis:active {
+            transform: scale(0.9);
+        }
+
         .spamton-head {
-            position: absolute; width: 100px; image-rendering: pixelated; pointer-events: none;
+            position: absolute;
+            width: 90px;
+            image-rendering: pixelated;
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
-    <div id="counter-ui">[Safe] Points: <span id="count-number">0</span></div>
+    <div id="counter-ui">[SAFE] POINTS: <span id="count-number">0</span></div>
     
-    <audio id="boomSound" src="boom.mp3"></audio>
+    <audio id="boomSound" src="boom.mp3" preload="auto"></audio>
+    
     <img id="pipis" src="pipis.png" onclick="spawnHeads()">
 
     <script>
-        // Load the count when the page opens
+        // 1. Setup the Counter (Browser Memory)
         let count = localStorage.getItem('pipisCount') || 0;
         document.getElementById('count-number').innerText = count;
 
+        // 2. The Random Redirect List
+        const safetyLinks = [
+            "https://deltarune.com/sweepstakes/",
+            "https://www.fangamer.com/products/deltarune-ch2-ralsei-plush?srsltid=AfmBOopPd9Bq7NmbpZ4T7U6yxomZ3sJaWbyHJg9NgfCoe0CTLVbVvyGx",
+            "https://www.fangamer.com/products/deltarune-ralsei-plush",
+            "https://youareanidiot.cc",
+            "https://deltarune.com",
+            "https://undertale.com"
+        ];
+
         function spawnHeads() {
-            // Update and Save the count
+            // Update Counter
             count++;
             localStorage.setItem('pipisCount', count);
             document.getElementById('count-number').innerText = count;
@@ -43,19 +79,24 @@
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            sound.play();
-            pipis.style.visibility = 'hidden'; // Hide but keep layout
+            // Play Sound
+            sound.play().catch(e => console.log("Click the page once first!"));
 
-            for (let i = 0; i < 35; i++) {
+            // Hide the Egg
+            pipis.style.visibility = 'hidden';
+
+            // Create the Explosion
+            for (let i = 0; i < 40; i++) {
                 const head = document.createElement('img');
                 head.src = 'spamton-head.gif';
                 head.className = 'spamton-head';
+                
                 head.style.left = centerX + 'px';
                 head.style.top = centerY + 'px';
                 document.body.appendChild(head);
 
                 const angle = Math.random() * Math.PI * 2;
-                const speed = 10 + Math.random() * 15; 
+                const speed = 12 + Math.random() * 18; // Super fast
                 const vx = Math.cos(angle) * speed;
                 const vy = Math.sin(angle) * speed;
 
@@ -63,19 +104,26 @@
                 let posY = centerY;
 
                 function moveHead() {
-                    posX += vx; posY += vy;
+                    posX += vx;
+                    posY += vy;
                     head.style.left = posX + 'px';
                     head.style.top = posY + 'px';
-                    if (posX > -200 && posX < window.innerWidth + 200 && posY > -200 && posY < window.innerHeight + 200) {
+                    
+                    if (posX > -200 && posX < window.innerWidth + 200 && 
+                        posY > -200 && posY < window.innerHeight + 200) {
                         requestAnimationFrame(moveHead);
-                    } else { head.remove(); }
+                    } else {
+                        head.remove();
+                    }
                 }
                 requestAnimationFrame(moveHead);
             }
 
+            // 3. Random Redirect
             setTimeout(() => {
-                window.location.href = "https://deltarune.com/sweepstakes/";
-            }, 2000);
+                const randomIndex = Math.floor(Math.random() * safetyLinks.length);
+                window.location.href = safetyLinks[randomIndex];
+            }, 2500);
         }
     </script>
 </body>
